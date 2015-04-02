@@ -25,7 +25,7 @@ $(document).ready(function () {
 			console.log(room);
 			if (typeof roomDivs[room] === 'undefined') {
 				tabList[room] = $('<li data-target="'+room+'">'+room+'</li>');
-				roomDivs[room] = $('<div id="'+room+'" class="my2 brdr--light-gray bg--white"><div class="header bg--off-white py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-4-6"><h1></h1></div><div class="grd-row-col-2-6 txt--right py1-5"><a href="#" class="leaveroom btn btn--gray">Leave room</a></div></div></div></div><div class="attendance-list m1">Attendance: <ul class="attendance"></ul></div><div class="m1"><ul class="msgs"></ul></div><div class="footer bg--off-white py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-5-6"><input type="text" class="msg" placeholder="Say something..." /></div><div class="grd-row-col-1-6"><input type="button" class="btn btn--blue msg-send" value="Say!" /></div></div></div></div></div>');
+				roomDivs[room] = $('<div id="'+room+'" class="my2 brdr--light-gray bg--white"><div class="header bg--off-white py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-4-6"><h1></h1></div><div class="grd-row-col-2-6 txt--right py1-5"><a href="#" class="leaveroom btn btn--gray">Leave room</a></div></div></div></div><div class="attendance-list m1">Attendance: <ul class="attendance"></ul></div><div class="m1"><ul class="msgs"></ul></div><div class="footer bg--off-white py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-5-6"><input type="text" class="msg" placeholder="Say something..." /></div><div class="grd-row-col-1-6"><input type="button" class="btn btn--blue msg-send" value="Say!" /></div></div><span class="writingSummary"></span></div></div></div>');
 				$('#rooms').append(roomDivs[room]);
 				$('#tabs ul').append(tabList[room]);
 				$('h1', roomDivs[room]).append(document.createTextNode(room));
@@ -111,6 +111,7 @@ $(document).ready(function () {
 
 		// Handle write notifications.
 		socket.on('writing', function (room, nickname, writing) {
+			var writingStr = '';
 			$('.attendance li', roomDivs[room]).each(function () {
 				if (nickname === $('.nick', this).html()) {
 					if (writing === true) {
@@ -119,7 +120,15 @@ $(document).ready(function () {
 						$(this).closest('li').find('.writing').hide();
 					}
 				}
+				if ($(this).closest('li').find('.writing').is(':visible')) {
+					if ($('.nick', this).html() !== $('#nickname').val()) {
+						if (writingStr !== '') writingStr += ', ';
+						writingStr += $('.nick', this).html();
+					}
+				}
 			});
+			if (writingStr !== '') writingStr += ' writing...';
+			$('.writingSummary', roomDivs[room]).html(writingStr);
 		});
 
 		// Output errors to console.
