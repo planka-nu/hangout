@@ -67,6 +67,20 @@ io.sockets.on('connection', function (socket) {
 		if (isValidNick(nickname) && typeof users[nickname] === 'undefined') {
 			users[nickname] = socket.user;
 			delete users[socket.user.nickname];
+
+			// Change the nick in all rooms.
+			socket.user.rooms.forEach(function (room) {
+				var index = rooms[room].users.indexOf(users[nickname].nickname);
+				if (index !== -1) {
+					delete rooms[room].users[index];
+				}
+				rooms[room].users.push(nickname);
+			});
+
+			socket.user.rooms.forEach(function (room) {
+				io.to(room).emit('message', room, 'SERVER', users[nickname].nickname + ' changed nick to: ' + nickname);
+				io.to(room).emit('attendance', room, rooms[room].users);
+			});
 			users[nickname].nickname = nickname;
 		} else {
 			socket.emit('errormsg', 'Invalid nick.');
