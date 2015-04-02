@@ -1,0 +1,22 @@
+{
+	"name": "hangout",
+	"version": "0.0.0",
+	"description": "https://hangouts.planka.nu/",
+	"main": "index.js",
+	"scripts": {
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/planka-nu/hangout.git"
+	},
+	"author": "Planka.nu <sthlm@planka.nu>",
+	"license": "GPLv3",
+	"bugs": {
+		"url": "https://github.com/planka-nu/hangout/issues"
+	},
+	"homepage": "https://github.com/planka-nu/hangout",
+	"dependencies": {
+		"express": "4.12.x",
+		"socket.io": "1.3.x"
+	}
+}
