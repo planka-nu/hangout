@@ -23,24 +23,31 @@ $(document).ready(function () {
 		socket.on('join', function (room) {
 			console.log(room);
 			if (typeof roomDivs[room] === 'undefined') {
-				roomDivs[room] = $('<div><h2></h2><ul class="attendance"></ul><a href="#" class="leaveroom">Leave room</a><ul class="msgs"></ul><input type="text" /></div>');
+				roomDivs[room] = $('<div class="my2 brdr--light-gray bg--white"><div class="header bg--off-white py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-4-6"><h1></h1></div><div class="grd-row-col-2-6 txt--right py1-5"><a href="#" class="leaveroom btn btn--gray">Leave room</a></div></div></div></div><div class="attendance-list m1">Attendance: <ul class="attendance"></ul></div><div class="m1"><ul class="msgs"></ul></div><div class="footer bg--off-white py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-5-6"><input type="text" class="msg" placeholder="Say something..." /></div><div class="grd-row-col-1-6"><input type="button" class="btn btn--blue msg-send" value="Say!" /></div></div></div></div></div>');
 				$('#rooms').append(roomDivs[room]);
-				$('h2', roomDivs[room]).append(document.createTextNode(room));
+				$('h1', roomDivs[room]).append(document.createTextNode(room));
 				$('a.leaveroom', roomDivs[room]).click(function () {
 					socket.emit('leave', room);
 				});
+
 				var writing = null;
+
+				$('input.msg-send', roomDivs[room]).click(function (e) {
+					var msgTarget =  $(this).closest('.footer').find('input.msg');
+					var msg = $(msgTarget).val();
+					$(msgTarget).val('');
+					socket.emit('message', room, msg);
+					socket.emit('writing', room, false);
+					if (writing !== null) {
+						clearTimeout(writing);
+						writing = null;
+					}
+					$('input', roomDivs[room]).focus();
+				});
 				$('input', roomDivs[room]).keypress(function (e) {
 
 					if (e.which === 13) {
-						var msg = $(this).val();
-						$(this).val('');
-						socket.emit('message', room, msg);
-						socket.emit('writing', room, false);
-						if (writing !== null) {
-							clearTimeout(writing);
-							writing = null;
-						}
+						$('input.msg-send').click();
 					} else {
 
 						if (writing !== null) {
