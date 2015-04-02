@@ -14,6 +14,7 @@ app.get('/', function (req, res) {
 });
 
 app.use('/furtive', express.static(__dirname + '/node_modules/furtive/'));
+app.use('/javascripts', express.static(__dirname + '/javascripts/'));
 app.use('/stylesheets', express.static(__dirname + '/stylesheets/'));
 
 var rooms = {};
