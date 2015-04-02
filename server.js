@@ -14,6 +14,7 @@ app.get('/', function (req, res) {
 });
 
 app.use('/furtive', express.static(__dirname + '/node_modules/furtive/'));
+app.use('/javascripts', express.static(__dirname + '/javascripts/'));
 app.use('/stylesheets', express.static(__dirname + '/stylesheets/'));
 
 var rooms = {};
@@ -108,9 +109,13 @@ io.sockets.on('connection', function (socket) {
 		if (index !== -1) {
 			delete socket.user.rooms[index];
 			socket.leave(room);
-			io.to(room).emit('message', room, 'SERVER', socket.user.nickname + ' left room ' + room + '.');
-			io.to(room).emit('attendance', room, rooms[room].users);
-			socket.emit('leave', room);
+			var leftmsg = socket.user.nickname + ' left room ' + room + '.';
+			socket.emit('attendance', room, rooms[room].users);
+			socket.emit('message', room, 'SERVER', leftmsg, function () {
+				socket.leave(room);
+				io.to(room).emit('message', room, 'SERVER', leftmsg);
+				io.to(room).emit('attendance', room, rooms[room].users);
+			});
 		}
 	});
 

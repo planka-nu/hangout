@@ -1,8 +1,7 @@
 @import url("/furtive/css/furtive.min.css");
 
 .py1-5 {
-	padding-top: 1.5rem;
-	padding-bottom: 1.5rem;
+	padding-top: 0.2rem;
 }
 
 #wrapper {
@@ -10,15 +9,55 @@
 	margin: auto;
 }
 
+#rooms .header {
+	border-bottom: thin solid rgba(216,216,216,.99);
+}
+
 #rooms .header h1 {
 	margin: 0;
 
-	font-size: 1em;
+	font-size: 1.5rem;
 	font-weight: 600;
+}
+
+#rooms .attendance-list {
+	font-size: 0.9rem;
+	font-weight: 600;
+
+	opacity: 0.5;
+}
+
+#rooms .attendance-list .attendance {
+	font-weight: 400;
+	display: inline;
+}
+
+#rooms .footer {
+	border-top: thin solid rgba(216,216,216,.99);
 }
 
 #rooms .footer input {
 	margin: 0;
+}
+
+#rooms .footer input[type=text] {
+	border-right: 0;
+}
+
+#rooms .footer input[type=button] {
+	padding: 0.4rem;
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+@media screen and (min-width: 32rem) {
+	#rooms .footer input[type=button] {
+		padding: 0.45rem;
+	}
 }
 
 ul.msgs {
