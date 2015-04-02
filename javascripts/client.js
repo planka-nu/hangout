@@ -100,6 +100,9 @@ $(document).ready(function () {
 		// Attendence list
 		socket.on('attendance', function (room, list) {
 			console.log(arguments);
+			$('.attendance-button', roomDivs[room]).html( list.length );
+			/*
+			
 			$('.attendance', roomDivs[room]).html('');
 			list.sort();
 			for (var i = 0; i < list.length; i++) {
@@ -107,6 +110,7 @@ $(document).ready(function () {
 				$('span.nick', li).append(document.createTextNode(list[i]));
 				$('.attendance', roomDivs[room]).append(li);
 			}
+			*/
 		});
 
 		// Handle write notifications.

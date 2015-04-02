@@ -1,5 +1,16 @@
 @import url("/furtive/css/furtive.min.css");
 
+@font-face {
+  font-family: 'fontello';
+  src: url('font/fontello.eot?84722129');
+  src: url('font/fontello.eot?84722129#iefix') format('embedded-opentype'),
+       url('font/fontello.woff?84722129') format('woff'),
+       url('font/fontello.ttf?84722129') format('truetype'),
+       url('font/fontello.svg?84722129#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .py1-5 {
 	padding-top: 0.2rem;
 }
@@ -60,10 +71,7 @@
 }
 
 #rooms .attendance-list {
-	font-size: 0.9rem;
-	font-weight: 600;
-
-	opacity: 0.5;
+	display: none;
 }
 
 #rooms .attendance-list .attendance {
@@ -85,7 +93,7 @@
 
 #rooms .footer input[type=button] {
 	display: inline;
-	padding: 0.4rem;
+	padding: 0.45rem;
 	-webkit-border-top-left-radius: 0px;
 	-webkit-border-bottom-left-radius: 0px;
 	-moz-border-radius-topleft: 0px;
@@ -106,6 +114,38 @@
 	line-height: normal;
 }
 
+#rooms .footer button.attendance-button:before { 
+	content: '\e800';
+	font-family: "fontello";
+	font-style: normal;
+	font-weight: normal;
+	speak: none;
+
+	display: inline-block;
+	text-decoration: inherit;
+	width: 1em;
+	margin-right: .2em;
+	text-align: center;
+	/* opacity: .8; */
+
+	/* For safety - reset parent styles, that can break glyph codes*/
+	font-variant: normal;
+	text-transform: none;
+	 
+	/* fix buttons height, for twitter bootstrap */
+	line-height: 1em;
+
+	/* Animation center compensation - margins should be symmetric */
+	/* remove if not needed */
+	margin-left: .2em;
+
+	/* you can be more comfortable with increased icons size */
+	/* font-size: 120%; */
+
+	/* Uncomment for 3D effect */
+	/* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
 #rooms .footer .container {
     width:600px;
     height:200px;
@@ -120,12 +160,6 @@
 #rooms .footer .right {
     min-width:30px;
     float:right;
-}
-
-@media screen and (min-width: 32rem) {
-	#rooms .footer input[type=button] {
-		padding: 0.45rem;
-	}
 }
 
 ul.msgs {
