@@ -29,7 +29,7 @@
 					socket.on('join', function (room) {
 						console.log(room);
 						if (typeof roomDivs[room] === 'undefined') {
-							roomDivs[room] = $('<div><h2></h2><a href="#" class="leaveroom">Leave room</a><ul class="msgs"></ul><input type="text" /></div>');
+							roomDivs[room] = $('<div><h2></h2><div class="attendance"></div><a href="#" class="leaveroom">Leave room</a><ul class="msgs"></ul><input type="text" /></div>');
 							$('#rooms').append(roomDivs[room]);
 							$('h2', roomDivs[room]).append(document.createTextNode(room));
 							$('a.leaveroom', roomDivs[room]).click(function () {
@@ -59,6 +59,12 @@
 						$('span.nick', li).append(document.createTextNode(nick));
 						$('span.msg', li).append(document.createTextNode(msg));
 						$('ul.msgs', roomDivs[room]).append(li);
+					});
+
+					// Attendence list
+					socket.on('attendance', function (room, list) {
+						console.log(arguments);
+						$('.attendance', roomDivs[room]).html(list.join(', '));
 					});
 
 					// Output errors to console.
