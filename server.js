@@ -13,6 +13,9 @@ app.get('/', function (req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
+app.use('/furtive', express.static(__dirname + '/node_modules/furtive/'));
+app.use('/stylesheets', express.static(__dirname + '/stylesheets/'));
+
 var users = {};
 
 // Create a new user.
