@@ -142,4 +142,9 @@ io.sockets.on('connection', function (socket) {
 		io.to(room).emit('message', room, socket.user.nickname, msg);
 	});
 
+	// Handle write notifications.
+	socket.on('writing', function (room, writing) {
+		io.to(room).emit('writing', room, socket.user.nickname, writing);
+	});
+
 });

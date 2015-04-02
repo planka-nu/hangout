@@ -23,17 +23,36 @@ $(document).ready(function () {
 		socket.on('join', function (room) {
 			console.log(room);
 			if (typeof roomDivs[room] === 'undefined') {
-				roomDivs[room] = $('<div><h2></h2><div class="attendance"></div><a href="#" class="leaveroom">Leave room</a><ul class="msgs"></ul><input type="text" /></div>');
+				roomDivs[room] = $('<div><h2></h2><ul class="attendance"></ul><a href="#" class="leaveroom">Leave room</a><ul class="msgs"></ul><input type="text" /></div>');
 				$('#rooms').append(roomDivs[room]);
 				$('h2', roomDivs[room]).append(document.createTextNode(room));
 				$('a.leaveroom', roomDivs[room]).click(function () {
 					socket.emit('leave', room);
 				});
+				var writing = null;
 				$('input', roomDivs[room]).keypress(function (e) {
+
 					if (e.which === 13) {
 						var msg = $(this).val();
 						$(this).val('');
 						socket.emit('message', room, msg);
+						socket.emit('writing', room, false);
+						if (writing !== null) {
+							clearTimeout(writing);
+							writing = null;
+						}
+					} else {
+
+						if (writing !== null) {
+							clearTimeout(writing);
+						} else {
+							socket.emit('writing', room, true);
+						}
+						writing = setTimeout(function () {
+							socket.emit('writing', room, false);
+							writing = null;
+						}, 2000);
+
 					}
 				});
 			}
@@ -58,7 +77,26 @@ $(document).ready(function () {
 		// Attendence list
 		socket.on('attendance', function (room, list) {
 			console.log(arguments);
-			$('.attendance', roomDivs[room]).html(list.join(', '));
+			$('.attendance', roomDivs[room]).html('');
+			list.sort();
+			for (var i = 0; i < list.length; i++) {
+				var li = $('<li><span class="nick"></span><span class="writing" style="display: none"> writing</span></li>');
+				$('span.nick', li).append(document.createTextNode(list[i]));
+				$('.attendance', roomDivs[room]).append(li);
+			}
+		});
+
+		// Handle write notifications.
+		socket.on('writing', function (room, nickname, writing) {
+			$('.attendance li', roomDivs[room]).each(function () {
+				if (nickname === $('.nick', this).html()) {
+					if (writing === true) {
+						$(this).closest('li').find('.writing').show();
+					} else {
+						$(this).closest('li').find('.writing').hide();
+					}
+				}
+			});
 		});
 
 		// Output errors to console.
