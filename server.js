@@ -63,25 +63,28 @@ io.sockets.on('connection', function (socket) {
 
 	// Handle requests to change the nickname.
 	socket.on('nickname', function (nickname) {
+		var oldNick = socket.user.nickname;
 		nickname = nickname.trim();
+
 		if (isValidNick(nickname) && typeof users[nickname] === 'undefined') {
-			users[nickname] = socket.user;
-			delete users[socket.user.nickname];
+
+			users[nickname] = users[oldNick]; 
+			users[nickname].nickname = nickname;
+			delete users[oldNick];
 
 			// Change the nick in all rooms.
 			socket.user.rooms.forEach(function (room) {
-				var index = rooms[room].users.indexOf(users[nickname].nickname);
+				var index = rooms[room].users.indexOf(oldNick);
 				if (index !== -1) {
-					delete rooms[room].users[index];
+					rooms[room].users.splice(index, 1);
 				}
 				rooms[room].users.push(nickname);
 			});
 
 			socket.user.rooms.forEach(function (room) {
-				io.to(room).emit('message', room, 'SERVER', users[nickname].nickname + ' changed nick to: ' + nickname);
+				io.to(room).emit('message', room, 'SERVER', oldNick + ' changed nick to: ' + nickname);
 				io.to(room).emit('attendance', room, rooms[room].users);
 			});
-			users[nickname].nickname = nickname;
 		} else {
 			socket.emit('errormsg', 'Invalid nick.');
 		}
@@ -116,12 +119,12 @@ io.sockets.on('connection', function (socket) {
 	socket.on('leave', function (room) {
 		var index = rooms[room].users.indexOf(socket.user.nickname);
 		if (index !== -1) {
-			delete rooms[room].users[index];
+			rooms[room].users.splice(index, 1);
 		}
 
 		index = socket.user.rooms.indexOf(room);
 		if (index !== -1) {
-			delete socket.user.rooms[index];
+			socket.user.rooms.splice(index, 1);
 			socket.leave(room);
 			var leftmsg = socket.user.nickname + ' left room ' + room + '.';
 			socket.emit('attendance', room, rooms[room].users);
@@ -135,6 +138,10 @@ io.sockets.on('connection', function (socket) {
 
 	// Handle incoming messages.
 	socket.on('message', function (room, msg) {
+		msg = msg.trim();
+		if (msg === '') {
+			return;
+		}
 		if (socket.user.rooms.indexOf(room) === -1) {
 			socket.emit('errormsg', 'You sent a message in a channel you have not joined.');
 			return;
