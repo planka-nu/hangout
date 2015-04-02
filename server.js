@@ -138,6 +138,10 @@ io.sockets.on('connection', function (socket) {
 
 	// Handle incoming messages.
 	socket.on('message', function (room, msg) {
+		msg = msg.trim();
+		if (msg === '') {
+			return;
+		}
 		if (socket.user.rooms.indexOf(room) === -1) {
 			socket.emit('errormsg', 'You sent a message in a channel you have not joined.');
 			return;
