@@ -9,6 +9,45 @@
 	margin: auto;
 }
 
+#joinroom {
+	margin-top: 1rem;
+}
+
+#tabs {
+	margin 1em 0;
+	border-bottom: thin solid rgba(216,216,216,.99);
+}
+
+#tabs ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#tabs ul li {
+	background-color: rgba(255,255,255,1);
+	display: inline-block;
+	padding: 0.5rem 1.5rem;
+	margin: 1rem;
+	margin-bottom: -1px;
+	border: thin solid rgba(216,216,216,.99);
+
+	cursor: pointer;
+}
+
+#tabs ul li:not(:first-child) {
+	margin-left: 0;
+}
+
+#tabs ul li.active, #tabs ul li:hover {
+	background-color: rgba(250,250,250,.99);
+	border-bottom: thin solid rgba(250,250,250,.99);
+}
+
+#rooms > div {
+	display: none;
+}
+
 #rooms .header {
 	border-bottom: thin solid rgba(216,216,216,.99);
 }
