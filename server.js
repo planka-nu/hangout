@@ -16,6 +16,7 @@ app.get('/', function (req, res) {
 app.use('/furtive', express.static(__dirname + '/node_modules/furtive/'));
 app.use('/stylesheets', express.static(__dirname + '/stylesheets/'));
 
+var rooms = {};
 var users = {};
 
 // Create a new user.
@@ -79,21 +80,36 @@ io.sockets.on('connection', function (socket) {
 			socket.emit('errormsg', 'Invalid room.');
 			return;
 		}
+		if (typeof rooms[room] === 'undefined') {
+			rooms[room] = {
+				users: []
+			};
+		}
+		if (rooms[room].users.indexOf(socket.user.nickname) === -1) {
+			rooms[room].users.push(socket.user.nickname);
+		}
 		if (socket.user.rooms.indexOf(room) === -1) {
 			socket.user.rooms.push(room);
 			socket.join(room);
 			socket.emit('join', room);
 			io.to(room).emit('message', room, 'SERVER', socket.user.nickname + ' joined room ' + room + '.');
+			io.to(room).emit('attendance', room, rooms[room].users);
 		}
 	});
 
 	// Handle requests to leave room.
 	socket.on('leave', function (room) {
-		var index = socket.user.rooms.indexOf(room);
+		var index = rooms[room].users.indexOf(socket.user.nickname);
+		if (index !== -1) {
+			delete rooms[room].users[index];
+		}
+
+		index = socket.user.rooms.indexOf(room);
 		if (index !== -1) {
 			delete socket.user.rooms[index];
 			socket.leave(room);
 			io.to(room).emit('message', room, 'SERVER', socket.user.nickname + ' left room ' + room + '.');
+			io.to(room).emit('attendance', room, rooms[room].users);
 			socket.emit('leave', room);
 		}
 	});
