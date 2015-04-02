@@ -30,13 +30,19 @@
 					socket.on('join', function (room) {
 						console.log(room);
 						if (typeof roomDivs[room] === 'undefined') {
-							roomDivs[room] = $('<div><h2></h2><div class="attendance"></div><a href="#" class="leaveroom">Leave room</a><ul class="msgs"></ul><input type="text" /></div>');
+							roomDivs[room] = $('<div class="my1 brdr--light-gray bg--white"><div class="header bg--light-gray py1-5"><div class="grd"><div class="grd-row"><div class="grd-row-col-4-6"><h1></h1></div><div class="grd-row-col-2-6 txt--right"><a href="#" class="leaveroom btn btn--s btn--gray">Leave room</a></div></div></div></div><div class="attendance"></div><div class="m1"><ul class="msgs"></ul></div><div class="footer bg--mid-gray py1"><div class="grd"><div class="grd-row"><div class="grd-row-col-5-6"><input type="text" class="msg" placeholder="Say something..." /></div><div class="grd-row-col-1-6"><input type="button" class="btn btn--blue msg-send" value="Say!" /></div></div></div></div></div>');
 							$('#rooms').append(roomDivs[room]);
-							$('h2', roomDivs[room]).append(document.createTextNode(room));
+							$('h1', roomDivs[room]).append(document.createTextNode(room));
 							$('a.leaveroom', roomDivs[room]).click(function () {
 								socket.emit('leave', room);
 							});
-							$('input', roomDivs[room]).keypress(function (e) {
+							$('input.msg-send', roomDivs[room]).click(function (e) {
+								var msgTarget =  $(this).closest('.footer').find('input.msg');
+								var msg = $(msgTarget).val();
+								$(msgTarget).val('');
+								socket.emit('message', room, msg);
+							});
+							$('input.msg', roomDivs[room]).keypress(function (e) {
 								if (e.which === 13) {
 									var msg = $(this).val();
 									$(this).val('');
@@ -82,19 +88,20 @@
 			}
 		</style>
 	</head>
-	<body>
-		<div id="wrapper">
+	<body class="bg--off-white">
+		<div id="wrapper" class="p1">
 
-			<div>
-				Nickname: <input id="nickname" />
+			<div id="start-form" class="brdr--light-gray p1 bg--white">
+				<label for="nickname">Nickname:</label>
+				<input name="nickname" id="nickname" />
+
+				<label for="roomname">Join room:</label>
+				<input class="roomname" id="roomname" /><input type="button" id="joinroom" value="Join!" class="btn btn--green" />
+				
 			</div>
-
-			<div>
-				Join room: <input id="roomname" /><input type="button" id="joinroom" value="Join!" />
-			</div>
-
-			<div id="rooms"></div>
 			
+			<div id="rooms"></div>
+
 		</div>
 	</body>
 </html>

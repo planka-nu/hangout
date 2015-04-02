@@ -1,1 +1,32 @@
 @import url("/furtive/css/furtive.min.css");
+
+.py1-5 {
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+}
+
+#wrapper {
+	max-width: 920px;
+	margin: auto;
+}
+
+#rooms .header h1 {
+	margin: 0;
+
+	font-size: 1em;
+	font-weight: 600;
+}
+
+#rooms .footer input {
+	margin: 0;
+}
+
+ul.msgs {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+span.nick {
+	font-weight: 600;
+}
