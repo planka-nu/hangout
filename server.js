@@ -116,8 +116,7 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 
-	// Handle requests to leave room.
-	socket.on('leave', function (room) {
+	var leaveRoom = function (room) {
 		var index = rooms[room].users.indexOf(socket.user.nickname);
 		if (index !== -1) {
 			rooms[room].users.splice(index, 1);
@@ -135,6 +134,16 @@ io.sockets.on('connection', function (socket) {
 				io.to(room).emit('attendance', room, rooms[room].users);
 			});
 		}
+	}
+
+	// Handle requests to leave room.
+	socket.on('leave', leaveRoom);
+
+	// Handle disconnects.
+	socket.on('disconnect', function () {
+		socket.user.rooms.forEach(function (room) {
+			leaveRoom(room);
+		});
 	});
 
 	// Handle incoming messages.
