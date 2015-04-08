@@ -114,7 +114,11 @@
 	line-height: normal;
 }
 
-#rooms .footer button.attendance-button:before { 
+#rooms .footer button.attendance-button i {
+	font-style: normal;
+}
+
+#rooms .footer button.attendance-button i:before {
 	content: '\e800';
 	font-family: "fontello";
 	font-style: normal;
