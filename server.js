@@ -14,6 +14,7 @@ app.get('/', function (req, res) {
 });
 
 app.use('/furtive', express.static(__dirname + '/node_modules/furtive/'));
+app.use('/tooltip', express.static(__dirname + '/node_modules/cssrecipes-tooltip/'));
 app.use('/javascripts', express.static(__dirname + '/javascripts/'));
 app.use('/stylesheets', express.static(__dirname + '/stylesheets/'));
 
