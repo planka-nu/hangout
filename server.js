@@ -2,11 +2,17 @@ var
 	config = require('./config.json'),
 	express = require('express'),
 	app = express(),
-	http = require('http'),
-	server = http.createServer(app),
+	https = require('https'),
+	fs = require('fs'),
+	credentials = {
+		key: fs.readFileSync('cert/ssl.key'),
+		ca: fs.readFileSync('cert/ssl.ca', 'utf8'),
+		cert: fs.readFileSync('cert/ssl.crt')
+	},
+	server = https.createServer(credentials, app),
 	io = require('socket.io').listen(server);
 
-server.listen(8080);
+server.listen(443);
 
 // routing
 app.get('/', function (req, res) {
