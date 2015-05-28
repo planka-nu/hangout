@@ -1,18 +1,30 @@
 var
 	config = require('./config.json'),
+	port = process.env.PORT || config.port || 8080,
 	express = require('express'),
-	app = express(),
-	https = require('https'),
 	fs = require('fs'),
-	credentials = {
-		key: fs.readFileSync('cert/ssl.key'),
-		ca: fs.readFileSync('cert/ssl.ca', 'utf8'),
-		cert: fs.readFileSync('cert/ssl.crt')
-	},
-	server = https.createServer(credentials, app),
-	io = require('socket.io').listen(server);
+	http = require('http'),
+	https = require('https'),
+	app = express(),
+	server;
 
-server.listen(443);
+if (config.sslCredentials && config.sslCredentials.keyFile && config.sslCredentials.certFile) {
+	/* If there are SSL credentials in the config file, then use HTTPS. */
+	var credentials = {
+		key: fs.readFileSync('cert/ssl.key'),
+		cert: fs.readFileSync('cert/ssl.crt')
+	};
+	if (config.sslCredentials.caFile) {
+		credentials.ca = fs.readFileSync('cert/ssl.ca');
+	}
+	server = https.createServer(credentials, app);
+} else {
+	server = http.createServer(app);
+}
+
+var io = require('socket.io').listen(server);
+
+server.listen(port);
 
 // routing
 app.get('/', function (req, res) {
