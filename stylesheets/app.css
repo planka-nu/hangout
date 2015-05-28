@@ -150,6 +150,24 @@
 	/* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+
+
+  /* tooltip content */
+#rooms .footer  .r-Tooltip::before {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    margin: 0 1rem 0 0;
+    padding: .5rem;
+
+    color: #222222;
+    background: #ffffff;
+
+    text-shadow: none;
+    box-shadow: none;
+
+    border: thin solid rgba(216,216,216,.99);
+}
+
 #rooms .footer .container {
     width:600px;
     height:200px;
